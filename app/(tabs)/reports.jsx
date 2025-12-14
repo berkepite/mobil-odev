@@ -1,8 +1,8 @@
-import { clearTimerHistory, getTimerRecords, seedDatabase } from '@/services/Database';
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { Alert, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { BarChart, PieChart } from 'react-native-chart-kit';
+import { clearTimerHistory, getTimerRecords, seedDatabase } from '../../services/Database';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -23,8 +23,8 @@ export default function ReportsScreen() {
         totalDistractions: 0,
         todayDistractions: 0,
     });
-    const [barData, setBarData] = useState<any>(null);
-    const [pieData, setPieData] = useState<any[]>([]);
+    const [barData, setBarData] = useState(null);
+    const [pieData, setPieData] = useState([]);
 
     const loadData = useCallback(() => {
         const records = getTimerRecords();
@@ -55,7 +55,7 @@ export default function ReportsScreen() {
         );
     };
 
-    const calculateStats = (records: any[]) => {
+    const calculateStats = (records) => {
         // Calculate stats for "Today" and "Last 7 Days"
         const now = new Date();
         const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
@@ -65,8 +65,8 @@ export default function ReportsScreen() {
         let allTimeFocus = 0;
         let totalDistractions = 0;
         let todayDistractions = 0;
-        const last7Days: Record<string, number> = {};
-        const categoryDurations: Record<string, number> = {};
+        const last7Days = {};
+        const categoryDurations = {};
 
         // Initialize last 7 days with 0
         for (let i = 0; i < 7; i++) {
@@ -123,7 +123,7 @@ export default function ReportsScreen() {
         setPieData(pData);
     };
 
-    const formatDuration = (seconds: number) => {
+    const formatDuration = (seconds) => {
         const h = Math.floor(seconds / 3600);
         const m = Math.floor((seconds % 3600) / 60);
         const s = seconds % 60;

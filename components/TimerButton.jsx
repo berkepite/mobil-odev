@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AppState, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { addTimerRecord, initDatabase } from '../services/Database';
 import CategoryPicker from './CategoryPicker';
@@ -19,7 +19,7 @@ export default function TimerButton() {
     const [isPaused, setIsPaused] = useState(false);
 
     // Timer interval reference
-    const intervalRef = useRef<number | null>(null);
+    const intervalRef = useRef(null);
     const appState = useRef(AppState.currentState);
 
     const [category, setCategory] = useState('Ders Çalışma');
@@ -126,7 +126,7 @@ export default function TimerButton() {
         setDistractions(0);
     };
 
-    const adjustTime = (minutes: number) => {
+    const adjustTime = (minutes) => {
         setInitialDuration(prev => {
             const newDuration = Math.max(5 * 60, prev + minutes * 60); // Minimum 5 minutes
             setTimer(newDuration);
@@ -134,7 +134,7 @@ export default function TimerButton() {
         });
     };
 
-    const formatTime = (seconds: number) => {
+    const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
         return `${mins}:${secs < 10 ? '0' : ''}${secs}`;

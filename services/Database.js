@@ -45,7 +45,7 @@ export const initDatabase = () => {
     }
 };
 
-export const addTimerRecord = (duration: number, category: string, distractions: number) => {
+export const addTimerRecord = (duration, category, distractions) => {
     try {
         const timestamp = Date.now();
         db.runSync(

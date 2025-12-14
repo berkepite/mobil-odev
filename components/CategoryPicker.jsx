@@ -1,15 +1,8 @@
-import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const CATEGORIES = ['Ders Çalışma', 'Kodlama', 'Proje', 'Kitap Okuma'];
 
-interface CategoryPickerProps {
-    selectedCategory: string;
-    onSelectCategory: (category: string) => void;
-    disabled?: boolean;
-}
-
-export default function CategoryPicker({ selectedCategory, onSelectCategory, disabled }: CategoryPickerProps) {
+export default function CategoryPicker({ selectedCategory, onSelectCategory, disabled }) {
     return (
         <View style={styles.container}>
             <Text style={styles.label}>Kategori Seçin:</Text>

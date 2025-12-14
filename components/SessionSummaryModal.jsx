@@ -1,18 +1,7 @@
-import React from 'react';
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-interface SessionSummaryModalProps {
-    visible: boolean;
-    onClose: () => void;
-    data: {
-        duration: number; // in seconds
-        category: string;
-        distractions: number;
-    };
-}
-
-export default function SessionSummaryModal({ visible, onClose, data }: SessionSummaryModalProps) {
-    const formatTime = (seconds: number) => {
+export default function SessionSummaryModal({ visible, onClose, data }) {
+    const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
         return `${mins}m ${secs}s`;
