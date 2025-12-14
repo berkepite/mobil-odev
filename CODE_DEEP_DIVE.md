@@ -5,25 +5,20 @@ This document explains the technical relationships between the application's Scr
 ## 1. Flow: The Timer Lifecycle
 The core feature of the app is the relationship between the **Home Screen**, **Timer Component**, and **Database**.
 
-```mermaid
-graph TD
-    User[User] -->|Interacts| HomeScreen[app/tabs/index.tsx]
-    HomeScreen -->|Renders| TimerButton[components/TimerButton.tsx]
-    
-    subgraph Timer Logic
-        TimerButton -->|Uses| useState[useState (timer, isActive)]
-        TimerButton -->|Uses| useRef[useRef (interval, AppState)]
-        TimerButton -->|Uses| CategoryPicker[CategoryPicker.tsx]
-    end
-
-    User -->|Backgrounds App| AppState[AppState Listener]
-    AppState -->|Triggers| TimerButton
-    TimerButton -->|Auto-Pauses| TimerButton
-
-    TimerButton -->|Session Ends| Database[services/Database.ts]
-    Database -->|INSERT| SQLite[(SQLite DB)]
-    TimerButton -->|Shows| Modal[SessionSummaryModal.tsx]
-```
+### Data & Event Flow
+1.  **User Interaction**: The user interacts with the **Home Screen** (`app/(tabs)/index.tsx`). This screen simply renders the `TimerButton` component.
+2.  **State Management**: `TimerButton` (`components/TimerButton.tsx`) manages all local state:
+    *   `timer`: Current countdown value.
+    *   `isActive`: Whether the timer is running.
+    *   `category`: The currently selected task type (from `CategoryPicker`).
+3.  **Background Handling**:
+    *   When the user **backgrounds the app** (e.g., switches to another app), the `AppState` listener triggers.
+    *   It checks `isActive` via a `useRef` (to avoid stale state) and automatically pauses the timer if it's running.
+    *   This triggers a state update in `TimerButton` to mark it as `isPaused`.
+4.  **Completion & Storage**:
+    *   When the timer ends or the user clicks "Finish", `TimerButton` calls `Database.ts`.
+    *   It runs an `INSERT` command to save `duration`, `timestamp`, `category`, and `distractions` into the SQLite database.
+    *   Finally, the `SessionSummaryModal` is displayed to the user.
 
 ### Key Relationships
 1.  **Home Screen -> TimerButton**: The Home screen is a "dumb" container. It simply mounts `TimerButton`, which contains 100% of the state logic.
@@ -35,22 +30,19 @@ graph TD
 ## 2. Flow: The Reports Dashboard
 The reports screen relies on "pulling" data rather than real-time subscriptions.
 
-```mermaid
-graph TD
-    User[User] -->|Navigates| ReportsScreen[app/(tabs)/reports.tsx]
-    
-    ReportsScreen -->|Mounts/Focuses| useFocusEffect[useFocusEffect Hook]
-    
-    subgraph Data Loading
-        useFocusEffect -->|Calls| loadData[loadData()]
-        loadData -->|Calls| getTimerRecords[Database.getTimerRecords()]
-        getTimerRecords -->|SELECT| SQLite[(SQLite DB)]
-    end
-    
-    loadData -->|Returns Data| calculateStats[calculateStats()]
-    calculateStats -->|Updates| useState[setStats / setBarData]
-    useState -->|Renders| Charts[BarChart / PieChart]
-```
+### Data & Event Flow
+1.  **User Navigation**: The user taps the "Reports" tab.
+2.  **Triggering Fetch**:
+    *   The `ReportsScreen` (`app/(tabs)/reports.tsx`) component mounts (or becomes focused).
+    *   The `useFocusEffect` hook fires. This is crucial because it runs *every time* the tab is viewed, unlike `useEffect` which only runs on mount.
+3.  **Loading Data**:
+    *   The hook calls `loadData()`.
+    *   `loadData()` calls `getTimerRecords()` from `Database.ts`.
+    *   `Database.ts` executes a `SELECT *` query against the SQLite database.
+4.  **Processing & Rendering**:
+    *   The raw rows are returned to the component.
+    *   `calculateStats()` iterates through the rows to calculate totals (Today, All Time) and chart data strings (Last 7 Days).
+    *   State is updated (`setStats`, `setBarData`), forcing a re-render to display the charts.
 
 ### Key Relationships
 1.  **Navigation -> ReportsScreen**: We use `useFocusEffect` (from `expo-router`) instead of `useEffect`.
