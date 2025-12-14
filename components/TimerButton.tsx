@@ -4,28 +4,34 @@ import { addTimerRecord, initDatabase } from '../services/Database';
 import CategoryPicker from './CategoryPicker';
 import SessionSummaryModal from './SessionSummaryModal';
 
+/**
+ * Main timer component that handles:
+ * - Countdown logic (default 25min)
+ * - State management (Active, Paused, Finished)
+ * - Automatic background pause handling via AppState
+ * - Saving sessions to SQLite database
+ */
 export default function TimerButton() {
     const DEFAULT_TIME = 25 * 60;
     const [initialDuration, setInitialDuration] = useState(DEFAULT_TIME);
     const [timer, setTimer] = useState(DEFAULT_TIME);
     const [isActive, setIsActive] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
+
+    // Timer interval reference
     const intervalRef = useRef<number | null>(null);
     const appState = useRef(AppState.currentState);
 
-    // Session State
     const [category, setCategory] = useState('Ders Çalışma');
-    // Actually the picker has 'Ders Çalışma', etc. Let's set default to one of them.
-    // Picker values: ['Ders Çalışma', 'Kodlama', 'Proje', 'Kitap Okuma']
     useEffect(() => { setCategory('Ders Çalışma'); }, []);
 
     const [distractions, setDistractions] = useState(0);
 
-    // Modal State
     const [modalVisible, setModalVisible] = useState(false);
     const [lastSession, setLastSession] = useState({ duration: 0, category: '', distractions: 0 });
 
-    // Refs to track current state inside event listener without re-binding
+    // Refs are used to access the latest state values inside the AppState listener
+    // without triggering re-renders or needing to re-bind the listener.
     const isActiveRef = useRef(isActive);
     const isPausedRef = useRef(isPaused);
 
@@ -34,19 +40,18 @@ export default function TimerButton() {
         isPausedRef.current = isPaused;
     }, [isActive, isPaused]);
 
-    // Initial Database setup
     useEffect(() => {
         initDatabase();
     }, []);
 
-    // AppState Listener
+    // Monitor app background/foreground state
     useEffect(() => {
         const subscription = AppState.addEventListener('change', nextAppState => {
             if (
                 appState.current.match(/active/) &&
                 nextAppState.match(/inactive|background/)
             ) {
-                // App going to background - Check refs instead of state
+                // Automatically pause if the app is backgrounded while the timer is running
                 if (isActiveRef.current && !isPausedRef.current) {
                     handlePause();
                 }
@@ -97,9 +102,8 @@ export default function TimerButton() {
         setIsActive(false);
         setIsPaused(false);
         setTimer(initialDuration);
+        setTimer(initialDuration);
         setDistractions(0);
-        // Requirement: "Reset... It wont show a summary."
-        // Also distractions reset? Yes, new session.
     };
 
     const handleFinish = () => {
@@ -146,14 +150,8 @@ export default function TimerButton() {
 
             <View style={styles.timerContainer}>
                 {/* Main Timer Display/Button */}
-                {/* 
-                   Requirement: 
-                   - Start Button (Green)
-                   - Pause Button (Yellow/Orange) -> becomes "Continue"
-                   - Reset Button (visible when paused?)
-                   - Finish Button (visible when paused?) -> Saves elapsed time
-                   - Distractions increment on Pause
-                */}
+                {/* Main Timer Display/Button */}
+
 
                 {!isActive ? (
                     <View style={styles.setupContainer}>
@@ -187,7 +185,6 @@ export default function TimerButton() {
                         {/* Circle Display - changes color if paused */}
                         <View style={[styles.timerDisplay, isPaused ? styles.timerDisplayPaused : styles.timerDisplayRunning]}>
                             <Text style={styles.timerDisplayText}>{formatTime(timer)}</Text>
-                            {/* Optional: Show distraction count here? */}
                             {distractions > 0 && <Text style={styles.distractionCountText}>Dikkat Dağınıklığı: {distractions}</Text>}
                         </View>
 

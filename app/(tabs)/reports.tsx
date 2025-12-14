@@ -56,7 +56,7 @@ export default function ReportsScreen() {
     };
 
     const calculateStats = (records: any[]) => {
-        console.log('Calculating stats for records:', records.length);
+        // Calculate stats for "Today" and "Last 7 Days"
         const now = new Date();
         const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
         const oneWeekAgo = todayStart - 6 * 24 * 60 * 60 * 1000;
@@ -76,7 +76,6 @@ export default function ReportsScreen() {
         }
 
         records.forEach(r => {
-            // console.log('Record:', r);
             allTimeFocus += r.duration;
             totalDistractions += (r.distractions || 0);
 

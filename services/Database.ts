@@ -2,6 +2,17 @@ import * as SQLite from 'expo-sqlite';
 
 const db = SQLite.openDatabaseSync('timer.db');
 
+/**
+ * Initializes the SQLite database.
+ * 
+ * Schema:
+ * - timer_history:
+ *   - id: INTEGER PRIMARY KEY
+ *   - duration: INTEGER (Session duration in seconds)
+ *   - timestamp: INTEGER (Unix timestamp of session end)
+ *   - category: TEXT (e.g., 'Ders Çalışma', 'Kodlama')
+ *   - distractions: INTEGER (Number of pauses/distractions)
+ */
 export const initDatabase = () => {
     try {
         db.execSync(`
@@ -14,20 +25,18 @@ export const initDatabase = () => {
         );
         `);
 
-        // Migration: Add category column if it doesn't exist
+        // Ensure 'category' column exists (for older app versions)
         try {
             db.execSync('ALTER TABLE timer_history ADD COLUMN category TEXT');
-            console.log('Added category column to timer_history');
         } catch (error) {
-            // Column likely already exists, ignore
+            // Column already exists
         }
 
-        // Migration: Add distractions column if it doesn't exist
+        // Ensure 'distractions' column exists (for older app versions)
         try {
             db.execSync('ALTER TABLE timer_history ADD COLUMN distractions INTEGER DEFAULT 0');
-            console.log('Added distractions column to timer_history');
         } catch (error) {
-            // Column likely already exists, ignore
+            // Column already exists
         }
 
         console.log('Database initialized successfully');
@@ -74,9 +83,7 @@ export const seedDatabase = () => {
         const now = Date.now();
         const DAY_MS = 24 * 60 * 60 * 1000;
 
-        // Clear existing data first? Maybe optional, but user asked to add.
-        // Let's add without clearing to preserve existing if any, or maybe clearing is safer for stress testing.
-        // I will just ADD.
+        // Generate 30 random records distributed over the last 7 days
 
         for (let i = 0; i < 30; i++) { // 30 records
             const daysAgo = Math.floor(Math.random() * 7); // Last 7 days
