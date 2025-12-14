@@ -67,3 +67,32 @@ export const clearTimerHistory = () => {
         console.error('Error clearing timer history:', error);
     }
 };
+
+export const seedDatabase = () => {
+    try {
+        const CATEGORIES = ['Ders Çalışma', 'Kodlama', 'Proje', 'Kitap Okuma'];
+        const now = Date.now();
+        const DAY_MS = 24 * 60 * 60 * 1000;
+
+        // Clear existing data first? Maybe optional, but user asked to add.
+        // Let's add without clearing to preserve existing if any, or maybe clearing is safer for stress testing.
+        // I will just ADD.
+
+        for (let i = 0; i < 30; i++) { // 30 records
+            const daysAgo = Math.floor(Math.random() * 7); // Last 7 days
+            const timestamp = now - (daysAgo * DAY_MS) - Math.floor(Math.random() * DAY_MS); // Random time within that day
+
+            const duration = Math.floor(Math.random() * 60 * 60); // 0-60 mins
+            const category = CATEGORIES[Math.floor(Math.random() * CATEGORIES.length)];
+            const distractions = Math.floor(Math.random() * 5);
+
+            db.runSync(
+                'INSERT INTO timer_history (duration, timestamp, category, distractions) VALUES (?, ?, ?, ?)',
+                [duration, timestamp, category, distractions]
+            );
+        }
+        console.log('Database seeded with dummy data');
+    } catch (error) {
+        console.error('Error seeding database:', error);
+    }
+};

@@ -1,4 +1,4 @@
-import { clearTimerHistory, getTimerRecords } from '@/services/Database';
+import { clearTimerHistory, getTimerRecords, seedDatabase } from '@/services/Database';
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { Alert, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -21,6 +21,7 @@ export default function ReportsScreen() {
         todayFocus: 0,
         allTimeFocus: 0,
         totalDistractions: 0,
+        todayDistractions: 0,
     });
     const [barData, setBarData] = useState<any>(null);
     const [pieData, setPieData] = useState<any[]>([]);
@@ -63,6 +64,7 @@ export default function ReportsScreen() {
         let todayFocus = 0;
         let allTimeFocus = 0;
         let totalDistractions = 0;
+        let todayDistractions = 0;
         const last7Days: Record<string, number> = {};
         const categoryDurations: Record<string, number> = {};
 
@@ -74,12 +76,13 @@ export default function ReportsScreen() {
         }
 
         records.forEach(r => {
-            console.log('Record:', r);
+            // console.log('Record:', r);
             allTimeFocus += r.duration;
             totalDistractions += (r.distractions || 0);
 
             if (r.timestamp >= todayStart) {
                 todayFocus += r.duration;
+                todayDistractions += (r.distractions || 0);
             }
 
             // Bar Chart Data (Last 7 Days)
@@ -100,6 +103,7 @@ export default function ReportsScreen() {
             todayFocus,
             allTimeFocus,
             totalDistractions,
+            todayDistractions,
         });
 
         // Format Bar Data
@@ -149,9 +153,16 @@ export default function ReportsScreen() {
                     <Text style={styles.cardValue}>{formatDuration(stats.allTimeFocus)}</Text>
                 </View>
             </View>
-            <View style={styles.card}>
-                <Text style={styles.cardTitle}>Toplam Dikkat Dağınıklığı</Text>
-                <Text style={styles.cardValue}>{stats.totalDistractions}</Text>
+
+            <View style={styles.statsRow}>
+                <View style={styles.card}>
+                    <Text style={styles.cardTitle}>Bugünün Dikkat Dağınıklığı</Text>
+                    <Text style={styles.cardValue}>{stats.todayDistractions}</Text>
+                </View>
+                <View style={styles.card}>
+                    <Text style={styles.cardTitle}>Toplam Dikkat Dağınıklığı</Text>
+                    <Text style={styles.cardValue}>{stats.totalDistractions}</Text>
+                </View>
             </View>
 
             {/* Bar Chart */}
@@ -170,7 +181,7 @@ export default function ReportsScreen() {
             )}
 
             {/* Pie Chart */}
-            <Text style={styles.chartTitle}>Kategori Dağılımı (Odaklanma süresi yüzdesi)</Text>
+            <Text style={styles.chartTitle}>Kategori Dağılımı (Odaklanma Süresi Yüzdesi)</Text>
             {pieData.length > 0 ? (
                 <PieChart
                     data={pieData}
@@ -189,6 +200,10 @@ export default function ReportsScreen() {
 
             <TouchableOpacity style={styles.clearButton} onPress={handleClearHistory}>
                 <Text style={styles.clearButtonText}>Geçmişi Temizle</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={[styles.clearButton, { backgroundColor: '#E3F2FD', borderColor: '#BBDEFB', marginTop: 10 }]} onPress={() => { seedDatabase(); loadData(); }}>
+                <Text style={[styles.clearButtonText, { color: '#1976D2' }]}>Örnek Veri Ekle</Text>
             </TouchableOpacity>
 
         </ScrollView>
