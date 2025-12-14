@@ -38,12 +38,12 @@ export default function ReportsScreen() {
 
     const handleClearHistory = () => {
         Alert.alert(
-            "Clear History",
-            "Are you sure you want to delete all timer records? This action cannot be undone.",
+            "Geçmişi Temizle",
+            "Tüm sayaç kayıtlarını silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
             [
-                { text: "Cancel", style: "cancel" },
+                { text: "İptal", style: "cancel" },
                 {
-                    text: "Delete",
+                    text: "Sil",
                     style: "destructive",
                     onPress: () => {
                         clearTimerHistory();
@@ -136,26 +136,26 @@ export default function ReportsScreen() {
 
     return (
         <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-            <Text style={styles.title}>Reports dashboard</Text>
+            <Text style={styles.title}>Rapor Paneli</Text>
 
             {/* General Stats */}
             <View style={styles.statsRow}>
                 <View style={styles.card}>
-                    <Text style={styles.cardTitle}>Today</Text>
+                    <Text style={styles.cardTitle}>Bugün</Text>
                     <Text style={styles.cardValue}>{formatDuration(stats.todayFocus)}</Text>
                 </View>
                 <View style={styles.card}>
-                    <Text style={styles.cardTitle}>All Time</Text>
+                    <Text style={styles.cardTitle}>Tüm Zamanlar</Text>
                     <Text style={styles.cardValue}>{formatDuration(stats.allTimeFocus)}</Text>
                 </View>
             </View>
             <View style={styles.card}>
-                <Text style={styles.cardTitle}>Total Distractions</Text>
+                <Text style={styles.cardTitle}>Toplam Dikkat Dağınıklığı</Text>
                 <Text style={styles.cardValue}>{stats.totalDistractions}</Text>
             </View>
 
             {/* Bar Chart */}
-            <Text style={styles.chartTitle}>Last 7 Days (Minutes)</Text>
+            <Text style={styles.chartTitle}>Son 7 Gün (Dakika)</Text>
             {barData && (
                 <BarChart
                     data={barData}
@@ -170,7 +170,7 @@ export default function ReportsScreen() {
             )}
 
             {/* Pie Chart */}
-            <Text style={styles.chartTitle}>Category Distribution</Text>
+            <Text style={styles.chartTitle}>Kategori Dağılımı (Odaklanma süresi yüzdesi)</Text>
             {pieData.length > 0 ? (
                 <PieChart
                     data={pieData}
@@ -184,11 +184,11 @@ export default function ReportsScreen() {
                     absolute={false}
                 />
             ) : (
-                <Text style={styles.noData}>No data available</Text>
+                <Text style={styles.noData}>Veri yok</Text>
             )}
 
             <TouchableOpacity style={styles.clearButton} onPress={handleClearHistory}>
-                <Text style={styles.clearButtonText}>Clear History</Text>
+                <Text style={styles.clearButtonText}>Geçmişi Temizle</Text>
             </TouchableOpacity>
 
         </ScrollView>

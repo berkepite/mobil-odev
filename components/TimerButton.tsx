@@ -170,7 +170,7 @@ export default function TimerButton() {
                         </TouchableOpacity>
 
                         <TouchableOpacity style={[styles.button, styles.buttonStart]} onPress={handleStart}>
-                            <Text style={styles.buttonText}>Start Timer</Text>
+                            <Text style={styles.buttonText}>Başlat</Text>
                             <Text style={styles.timeText}>{formatTime(timer)}</Text>
                         </TouchableOpacity>
 
@@ -186,33 +186,33 @@ export default function TimerButton() {
                         <View style={[styles.timerDisplay, isPaused ? styles.timerDisplayPaused : styles.timerDisplayRunning]}>
                             <Text style={styles.timerDisplayText}>{formatTime(timer)}</Text>
                             {/* Optional: Show distraction count here? */}
-                            {distractions > 0 && <Text style={styles.distractionCountText}>Distractions: {distractions}</Text>}
+                            {distractions > 0 && <Text style={styles.distractionCountText}>Dikkat Dağınıklığı: {distractions}</Text>}
                         </View>
 
                         <View style={styles.controlsRow}>
                             {!isPaused ? (
                                 <>
                                     <TouchableOpacity style={[styles.controlButton, styles.buttonPause]} onPress={handlePause}>
-                                        <Text style={styles.controlButtonText}>Pause</Text>
+                                        <Text style={styles.controlButtonText}>Duraklat</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity style={[styles.controlButton, styles.buttonFinish]} onPress={handleFinish}>
-                                        <Text style={styles.controlButtonText}>Finish</Text>
+                                        <Text style={styles.controlButtonText}>Bitir</Text>
                                     </TouchableOpacity>
                                 </>
                             ) : (
                                 <>
                                     <View style={styles.pausedControlsColumn}>
                                         <TouchableOpacity style={[styles.controlButton, styles.buttonContinue]} onPress={handleStart}>
-                                            <Text style={styles.controlButtonText}>Continue</Text>
+                                            <Text style={styles.controlButtonText}>Devam Et</Text>
                                         </TouchableOpacity>
 
                                         <View style={styles.secondaryControlsRow}>
                                             <TouchableOpacity style={[styles.controlButton, styles.buttonFinish]} onPress={handleFinish}>
-                                                <Text style={styles.controlButtonText}>Finish</Text>
+                                                <Text style={styles.controlButtonText}>Bitir</Text>
                                             </TouchableOpacity>
 
                                             <TouchableOpacity style={[styles.controlButton, styles.buttonReset]} onPress={handleReset}>
-                                                <Text style={styles.controlButtonText}>Reset</Text>
+                                                <Text style={styles.controlButtonText}>Sıfırla</Text>
                                             </TouchableOpacity>
                                         </View>
                                     </View>

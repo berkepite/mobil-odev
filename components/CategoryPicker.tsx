@@ -12,7 +12,7 @@ interface CategoryPickerProps {
 export default function CategoryPicker({ selectedCategory, onSelectCategory, disabled }: CategoryPickerProps) {
     return (
         <View style={styles.container}>
-            <Text style={styles.label}>Select Category:</Text>
+            <Text style={styles.label}>Kategori Seçin:</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
                 {CATEGORIES.map((cat) => (
                     <TouchableOpacity

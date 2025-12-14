@@ -27,20 +27,20 @@ export default function SessionSummaryModal({ visible, onClose, data }: SessionS
         >
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>
-                    <Text style={styles.modalTitle}>Session Complete!</Text>
+                    <Text style={styles.modalTitle}>Seans Tamamlandı!</Text>
 
                     <View style={styles.statRow}>
-                        <Text style={styles.statLabel}>Duration:</Text>
+                        <Text style={styles.statLabel}>Süre:</Text>
                         <Text style={styles.statValue}>{formatTime(data.duration)}</Text>
                     </View>
 
                     <View style={styles.statRow}>
-                        <Text style={styles.statLabel}>Category:</Text>
+                        <Text style={styles.statLabel}>Kategori:</Text>
                         <Text style={styles.statValue}>{data.category}</Text>
                     </View>
 
                     <View style={styles.statRow}>
-                        <Text style={styles.statLabel}>Distractions:</Text>
+                        <Text style={styles.statLabel}>Dikkat Dağınıklığı:</Text>
                         <Text style={styles.statValue}>{data.distractions}</Text>
                     </View>
 
@@ -48,7 +48,7 @@ export default function SessionSummaryModal({ visible, onClose, data }: SessionS
                         style={styles.closeButton}
                         onPress={onClose}
                     >
-                        <Text style={styles.textStyle}>Close</Text>
+                        <Text style={styles.textStyle}>Kapat</Text>
                     </TouchableOpacity>
                 </View>
             </View>
