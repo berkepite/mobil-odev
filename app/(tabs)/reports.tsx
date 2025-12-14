@@ -55,6 +55,7 @@ export default function ReportsScreen() {
     };
 
     const calculateStats = (records: any[]) => {
+        console.log('Calculating stats for records:', records.length);
         const now = new Date();
         const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
         const oneWeekAgo = todayStart - 6 * 24 * 60 * 60 * 1000;
@@ -73,6 +74,7 @@ export default function ReportsScreen() {
         }
 
         records.forEach(r => {
+            console.log('Record:', r);
             allTimeFocus += r.duration;
             totalDistractions += (r.distractions || 0);
 
@@ -84,8 +86,6 @@ export default function ReportsScreen() {
             if (r.timestamp >= oneWeekAgo) {
                 const d = new Date(r.timestamp);
                 const label = `${d.getDate()}/${d.getMonth() + 1}`;
-                // Since we initialize all keys, we can just add to them if they exist (or nearest bucket)
-                // For simplicity, strict match:
                 if (last7Days[label] !== undefined) {
                     last7Days[label] += r.duration / 60; // Minutes
                 }
@@ -123,6 +123,14 @@ export default function ReportsScreen() {
     const formatDuration = (seconds: number) => {
         const h = Math.floor(seconds / 3600);
         const m = Math.floor((seconds % 3600) / 60);
+        const s = seconds % 60;
+
+        if (h === 0 && m === 0) {
+            return `${s}s`;
+        }
+        if (h === 0) {
+            return `${m}m ${s}s`;
+        }
         return `${h}h ${m}m`;
     };
 

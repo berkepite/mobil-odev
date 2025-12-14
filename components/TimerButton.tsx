@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { AppState, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { addTimerRecord, initDatabase } from '../services/Database';
 import CategoryPicker from './CategoryPicker';
 import SessionSummaryModal from './SessionSummaryModal';
@@ -11,6 +11,7 @@ export default function TimerButton() {
     const [isActive, setIsActive] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
     const intervalRef = useRef<number | null>(null);
+    const appState = useRef(AppState.currentState);
 
     // Session State
     const [category, setCategory] = useState('Ders Çalışma');
@@ -24,8 +25,43 @@ export default function TimerButton() {
     const [modalVisible, setModalVisible] = useState(false);
     const [lastSession, setLastSession] = useState({ duration: 0, category: '', distractions: 0 });
 
+    // Refs to track current state inside event listener without re-binding
+    const isActiveRef = useRef(isActive);
+    const isPausedRef = useRef(isPaused);
+
+    useEffect(() => {
+        isActiveRef.current = isActive;
+        isPausedRef.current = isPaused;
+    }, [isActive, isPaused]);
+
+    // Initial Database setup
     useEffect(() => {
         initDatabase();
+    }, []);
+
+    // AppState Listener
+    useEffect(() => {
+        const subscription = AppState.addEventListener('change', nextAppState => {
+            if (
+                appState.current.match(/active/) &&
+                nextAppState.match(/inactive|background/)
+            ) {
+                // App going to background - Check refs instead of state
+                if (isActiveRef.current && !isPausedRef.current) {
+                    handlePause();
+                }
+            }
+
+            appState.current = nextAppState;
+        });
+
+        return () => {
+            subscription.remove();
+        };
+    }, []); // Empty dependency array = Listener bound once
+
+    // Cleanup interval on unmount
+    useEffect(() => {
         return () => stopInterval();
     }, []);
 
