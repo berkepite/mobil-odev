@@ -7,7 +7,7 @@ The core feature of the app is the relationship between the **Home Screen**, **T
 
 ```mermaid
 graph TD
-    User[User] -->|Interacts| HomeScreen[app/(tabs)/index.tsx]
+    User[User] -->|Interacts| HomeScreen[app/tabs/index.tsx]
     HomeScreen -->|Renders| TimerButton[components/TimerButton.tsx]
     
     subgraph Timer Logic
