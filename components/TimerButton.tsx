@@ -144,13 +144,6 @@ export default function TimerButton() {
                 data={lastSession}
             />
 
-            {!isActive && (
-                <CategoryPicker
-                    selectedCategory={category}
-                    onSelectCategory={setCategory}
-                />
-            )}
-
             <View style={styles.timerContainer}>
                 {/* Main Timer Display/Button */}
                 {/* 
@@ -163,21 +156,30 @@ export default function TimerButton() {
                 */}
 
                 {!isActive ? (
-                    <View style={styles.setupRow}>
-                        {/* Minus Button */}
-                        <TouchableOpacity style={styles.adjustButton} onPress={() => adjustTime(-5)}>
-                            <Text style={styles.adjustButtonText}>-5</Text>
-                        </TouchableOpacity>
+                    <View style={styles.setupContainer}>
+                        <View style={styles.setupRow}>
+                            {/* Minus Button */}
+                            <TouchableOpacity style={styles.adjustButton} onPress={() => adjustTime(-5)}>
+                                <Text style={styles.adjustButtonText}>-5</Text>
+                            </TouchableOpacity>
 
-                        <TouchableOpacity style={[styles.button, styles.buttonStart]} onPress={handleStart}>
-                            <Text style={styles.buttonText}>Başlat</Text>
-                            <Text style={styles.timeText}>{formatTime(timer)}</Text>
-                        </TouchableOpacity>
+                            <TouchableOpacity style={[styles.button, styles.buttonStart]} onPress={handleStart}>
+                                <Text style={styles.buttonText}>Başlat</Text>
+                                <Text style={styles.timeText}>{formatTime(timer)}</Text>
+                            </TouchableOpacity>
 
-                        {/* Plus Button */}
-                        <TouchableOpacity style={styles.adjustButton} onPress={() => adjustTime(5)}>
-                            <Text style={styles.adjustButtonText}>+5</Text>
-                        </TouchableOpacity>
+                            {/* Plus Button */}
+                            <TouchableOpacity style={styles.adjustButton} onPress={() => adjustTime(5)}>
+                                <Text style={styles.adjustButtonText}>+5</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                        <View style={styles.categoryContainer}>
+                            <CategoryPicker
+                                selectedCategory={category}
+                                onSelectCategory={setCategory}
+                            />
+                        </View>
                     </View>
                 ) : (
                     // Active State
@@ -236,6 +238,14 @@ const styles = StyleSheet.create({
     timerContainer: {
         alignItems: 'center',
         marginVertical: 20,
+    },
+    setupContainer: {
+        alignItems: 'center',
+        width: '100%',
+    },
+    categoryContainer: {
+        marginTop: 40,
+        width: '100%',
     },
     setupRow: {
         flexDirection: 'row',

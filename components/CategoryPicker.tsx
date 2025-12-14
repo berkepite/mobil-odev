@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const CATEGORIES = ['Ders Çalışma', 'Kodlama', 'Proje', 'Kitap Okuma'];
 
@@ -13,7 +13,7 @@ export default function CategoryPicker({ selectedCategory, onSelectCategory, dis
     return (
         <View style={styles.container}>
             <Text style={styles.label}>Kategori Seçin:</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+            <View style={styles.categoriesGroup}>
                 {CATEGORIES.map((cat) => (
                     <TouchableOpacity
                         key={cat}
@@ -33,33 +33,36 @@ export default function CategoryPicker({ selectedCategory, onSelectCategory, dis
                         </Text>
                     </TouchableOpacity>
                 ))}
-            </ScrollView>
+            </View>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        marginBottom: 20,
         width: '100%',
+        alignItems: 'center', // Center the label and group
     },
     label: {
         fontSize: 16,
         fontWeight: '600',
-        marginBottom: 10,
+        marginBottom: 15, // Increased spacing
         color: '#333',
     },
-    scrollContent: {
-        paddingRight: 20,
+    categoriesGroup: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        gap: 10, // Uses gap for spacing between chips
     },
     chip: {
-        paddingHorizontal: 16,
-        paddingVertical: 8,
-        borderRadius: 20,
-        backgroundColor: '#f0f0f0',
-        marginRight: 10,
+        paddingHorizontal: 20, // Slightly larger touch target
+        paddingVertical: 10,
+        borderRadius: 25,
+        backgroundColor: '#f5f5f5',
         borderWidth: 1,
         borderColor: '#e0e0e0',
+        elevation: 1,
     },
     chipSelected: {
         backgroundColor: '#4CAF50',
