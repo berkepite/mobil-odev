@@ -2,7 +2,25 @@
 
 This document provides a technical overview of the **Timer & Focus App**. It details the application architecture, key components, database services, and important implementation details.
 
-## 📱 Screens
+
+## How to Run
+
+1.  **Install Dependencies**:
+    ```bash
+    npm install
+    ```
+
+2.  **Start the Server**:
+    ```bash
+    npx expo start
+    ```
+
+3.  **Run on Device/Emulator**:
+    - **Android**: Press `a` in the terminal or run `npm run android`.
+    - **iOS**: Press `i` in the terminal or run `npm run ios`.
+    - **Web**: Press `w` in the terminal or run `npm run web`.
+
+## Screens
 
 The application is built using **Expo Router** with a file-based routing system. The main interface is a Tab Navigator.
 
@@ -24,7 +42,7 @@ The application is built using **Expo Router** with a file-based routing system.
 
 ---
 
-## 🧩 Components
+## Components
 
 Reusable UI building blocks located in the `components/` directory.
 
@@ -50,7 +68,7 @@ Reusable UI building blocks located in the `components/` directory.
 
 ---
 
-## 🛠 Services
+## Services
 
 ### `Database.ts` (`services/Database.ts`)
 - **Technology**: `expo-sqlite`
@@ -72,7 +90,7 @@ Reusable UI building blocks located in the `components/` directory.
 
 ---
 
-## ⚡ Key Hooks & Concepts
+## Key Hooks & Concepts
 
 ### 1. `AppState` & Auto-Pause
 In `TimerButton.tsx`, we monitor if the user leaves the app (backgrounds it) while the timer is running.
@@ -103,7 +121,7 @@ Used in `reports.tsx`.
 
 ---
 
-## 🏗 Directory Structure
+## Directory Structure
 
 ```text
 /app
